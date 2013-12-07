@@ -7,58 +7,46 @@ import static org.junit.Assert.*;
  *
  * @author Marcius
  */
-public class NovaSolicitacaoTest {
+public class AguardandoChefiaTest {
 
-    @Test
-    public void testSolicitar() {
-        //Cenário
-        NovaSolicitacao instance = montaCenario();
-
-        //Ação
+    @Test(expected = IllegalStateException.class)
+    public void testSolicitar() throws Exception {
+        AguardandoChefia instance = montaCenario();
         instance.solicitar();
-
-        //Validação
-        assertEquals(new AguardandoChefia(), instance.solicitacao.status);
     }
-
-    @Test(expected = IllegalStateException.class)
+    
     public void testAprovar() throws Exception {
-        //Cenário
-        NovaSolicitacao instance = montaCenario();
-
+        AguardandoChefia instance = montaCenario();
         instance.aprovar();
+        assertEquals(new AguardandoRH(), instance.solicitacao.status);
     }
-
-    @Test(expected = IllegalStateException.class)
+    
     public void testRecusar() throws Exception {
-        //Cenário
-        NovaSolicitacao instance = montaCenario();
-
+        AguardandoChefia instance = montaCenario();
         instance.recusar();
+        assertEquals(new Recusada(), instance.solicitacao.status);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testRetornar() throws Exception {
-        //Cenário
-        NovaSolicitacao instance = montaCenario();
-
+        AguardandoChefia instance = montaCenario();
         instance.retornar();
     }
 
-    @Test(expected = IllegalStateException.class)
     public void testCancelar() throws Exception {
-        NovaSolicitacao instance = montaCenario();
+        AguardandoChefia instance = montaCenario();
         instance.cancelar();
+        assertEquals(new Cancelada(), instance.solicitacao.status);
     }
-
-    private NovaSolicitacao montaCenario(){
+    
+    private AguardandoChefia montaCenario(){
         //Cenário
         Funcionario funcionario = new Funcionario();
         funcionario.setNome("JOAO");
         Solicitacao solicitacao = new Solicitacao();
         solicitacao.setFuncionario(funcionario);
 
-        NovaSolicitacao instance = new NovaSolicitacao();
+        AguardandoChefia instance = new AguardandoChefia();
         instance.solicitacao = solicitacao;
         return instance;
     }

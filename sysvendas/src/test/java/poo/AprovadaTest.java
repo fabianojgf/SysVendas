@@ -2,12 +2,9 @@ package poo;
 
 import org.junit.Test;
 
-import poo.Aprovada;
-
-
 /**
  *
- * @author Microsoft
+ * @author Marcius
  */
 public class AprovadaTest {
 
@@ -35,4 +32,9 @@ public class AprovadaTest {
         instance.retornar();
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testCancelar() throws Exception {
+        Aprovada instance = new Aprovada();
+        instance.cancelar();
+    }
 }

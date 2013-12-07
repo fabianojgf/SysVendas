@@ -1,26 +1,13 @@
 package poo;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Set;
-
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import poo.AguardandoChefia;
-import poo.AguardandoRH;
-import poo.Aprovada;
-import poo.Funcionario;
-import poo.NovaSolicitacao;
-import poo.Recusada;
-import poo.Solicitacao;
-import poo.Status;
-
+import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 
 /**
  * Exemplo de demonstração de um teste O diagrama de atividades pode ajudar aqui
@@ -37,6 +24,25 @@ public class SolicitacaoTest {
         validator = factory.getValidator();
     }
 
+    private Solicitacao montaCenarioFluxoNornal() {
+        //Cenãrio
+        Funcionario funcionario = new Funcionario();
+        funcionario.setNome("JOAO");
+        Solicitacao solicitacao = new Solicitacao();
+        solicitacao.setFuncionario(funcionario);
+        return solicitacao;
+    }
+
+    private Solicitacao montaCenarioAtestadoMedico() {
+        //Cenãrio
+        Funcionario funcionario = new Funcionario();
+        funcionario.setNome("JOAO");
+        Solicitacao solicitacao = new Solicitacao();
+        solicitacao.setFuncionario(funcionario);
+        solicitacao.setTipo(Solicitacao.Tipo.ATESTADO_MEDICO);
+        return solicitacao;
+    }
+    
     @Test
     public void solicitacaoEhValida() {
         Solicitacao solicitacao = new Solicitacao();
@@ -54,7 +60,7 @@ public class SolicitacaoTest {
      */
     @Test
     public void testSolicitar() throws Exception {
-        Solicitacao solicitacao = montaCenario();
+        Solicitacao solicitacao = montaCenarioFluxoNornal();
 
         //Ação
         solicitacao.solicitar();
@@ -64,18 +70,9 @@ public class SolicitacaoTest {
         assertEquals(statusEsperado, solicitacao.status);
     }
 
-    private Solicitacao montaCenario() {
-        //Cenário
-        Funcionario funcionario = new Funcionario();
-        funcionario.setNome("JOAO");
-        Solicitacao solicitacao = new Solicitacao();
-        solicitacao.setFuncionario(funcionario);
-        return solicitacao;
-    }
-
     @Test
     public void testHappyDay() throws Exception {
-        Solicitacao solicitacao = montaCenario();
+        Solicitacao solicitacao = montaCenarioFluxoNornal();
 
         //Ação
         Status result1 = solicitacao.status;
@@ -94,8 +91,43 @@ public class SolicitacaoTest {
     }
 
     @Test
+    public void testHappyDayAtestadoMedico() throws Exception {
+        Solicitacao solicitacao = montaCenarioAtestadoMedico();
+
+        //Ação
+        Status result1 = solicitacao.status;
+        solicitacao.solicitar();
+        
+        Status result2 = solicitacao.status;
+        solicitacao.aprovar();
+        Status result3 = solicitacao.status;
+
+        //Validação
+        assertEquals(new NovaSolicitacao(), result1);
+        assertEquals(new AguardandoRH(), result2);
+        assertEquals(new Aprovada(), result3);
+    }
+
+    @Test
+    public void testCancelarSolicitacaoDeAtestadoMedico() throws Exception {
+        Solicitacao solicitacao = montaCenarioAtestadoMedico();
+
+        //Ação
+        Status result1 = solicitacao.status;
+        solicitacao.solicitar();        
+        Status result2 = solicitacao.status;
+        solicitacao.cancelar();
+        Status result3 = solicitacao.status;
+
+        //Validação
+        assertEquals(new NovaSolicitacao(), result1);
+        assertEquals(new AguardandoRH(), result2);
+        assertEquals(new Cancelada(), result3);
+    }
+    
+    @Test
     public void testSolicitacaoRecusadaPelaChefia() throws Exception {
-        Solicitacao solicitacao = montaCenario();
+        Solicitacao solicitacao = montaCenarioFluxoNornal();
 
         //Ação
         solicitacao.solicitar();
@@ -107,7 +139,7 @@ public class SolicitacaoTest {
 
     @Test
     public void testSolicitacaoRecusadaPeloRH() throws Exception {
-        Solicitacao solicitacao = montaCenario();
+        Solicitacao solicitacao = montaCenarioFluxoNornal();
         solicitacao.solicitar();
         solicitacao.aprovar();
 
@@ -120,7 +152,7 @@ public class SolicitacaoTest {
 
     @Test(expected = IllegalStateException.class)
     public void testSolicitacaoNovaNaoPodeSerAprovada() throws Exception {
-        Solicitacao solicitacao = montaCenario();
+        Solicitacao solicitacao = montaCenarioFluxoNornal();
 
         //Ação/validação
         solicitacao.aprovar();
@@ -128,7 +160,7 @@ public class SolicitacaoTest {
 
     @Test(expected = IllegalStateException.class)
     public void testSolicitacaoNovaNaoPodeSerRecusada() throws Exception {
-        Solicitacao solicitacao = montaCenario();
+        Solicitacao solicitacao = montaCenarioFluxoNornal();
 
         //Ação/validação
         solicitacao.recusar();
@@ -136,7 +168,7 @@ public class SolicitacaoTest {
 
     @Test(expected = IllegalStateException.class)
     public void testSolicitacaoAprovadaNaoPodeSerRetornada() throws Exception {
-        Solicitacao solicitacao = montaCenario();
+        Solicitacao solicitacao = montaCenarioFluxoNornal();
 
         solicitacao.aprovar();
         solicitacao.aprovar();
@@ -147,7 +179,7 @@ public class SolicitacaoTest {
 
     @Test(expected = IllegalStateException.class)
     public void testSolicitacaoAprovadaNaoPodeSerRecusada() throws Exception {
-        Solicitacao solicitacao = montaCenario();
+        Solicitacao solicitacao = montaCenarioFluxoNornal();
 
         solicitacao.aprovar();
         solicitacao.aprovar();
@@ -158,7 +190,7 @@ public class SolicitacaoTest {
 
     @Test(expected = IllegalStateException.class)
     public void testSolicitacaoRecusadaNaoPodeSerAprovada() throws Exception {
-        Solicitacao solicitacao = montaCenario();
+        Solicitacao solicitacao = montaCenarioFluxoNornal();
 
         solicitacao.solicitar();
         solicitacao.recusar();
