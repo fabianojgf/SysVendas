@@ -35,6 +35,12 @@ public class Aprovada extends Status {
 		throw new IllegalStateException(
 				"A solicitação nao pode ser Retornada pois está Aprovada");
 	}
+	
+	@Override
+	public void cancelar() {
+		throw new IllegalStateException(
+				"A solicitação nao pode ser Cancelada pois está Aprovada");
+	}
 
 	@Override
 	public String toString() {

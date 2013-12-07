@@ -36,6 +36,12 @@ public class Recusada extends Status {
 		throw new IllegalStateException(
 				"A solicitação nao pode ser Retornada pois está Recusada");
 	}
+	
+	@Override
+	public void cancelar() {
+		throw new IllegalStateException(
+				"A solicitação nao pode ser Cancelada pois está Recusada");
+	}
 
 	@Override
 	public String toString() {

@@ -4,44 +4,47 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class AguardandoRH extends Status {
+public class Cancelada extends Status {
 
 	@Id
 	private Long id;
-	
-	public AguardandoRH() {
-		this.id = super.AGUARDANDO_RH;
+
+	public Cancelada() {
+		this.id = super.APROVADA;
 	}
-	
+
 	@Override
 	public void solicitar() {
 		throw new IllegalStateException(
-				"A solicitação nao pode ser Solicitada pois está AguardandoRH");
+				"A solicitação nao pode ser Aprovada pois está Aprovada");
 	}
 
 	@Override
 	public void aprovar() {
-		this.solicitacao.setStatus(new Aprovada());
+		throw new IllegalStateException("A solicitação já está Aprovada");
 	}
 
 	@Override
 	public void recusar() {
-		this.solicitacao.setStatus(new Recusada());
+		throw new IllegalStateException(
+				"A solicitação nao pode ser Recusada pois está Aprovada");
 	}
 
 	@Override
 	public void retornar() {
-		this.solicitacao.setStatus(new AguardandoChefia());
+		throw new IllegalStateException(
+				"A solicitação nao pode ser Retornada pois está Aprovada");
 	}
 	
 	@Override
 	public void cancelar() {
-		this.solicitacao.setStatus(new Cancelada());
+		throw new IllegalStateException(
+				"A solicitação já está cancelada");
 	}
 
 	@Override
 	public String toString() {
-		return "AguardandoRH";
+		return "Aprovada";
 	}
 
 	@Override
@@ -56,7 +59,7 @@ public class AguardandoRH extends Status {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof AguardandoRH))
+		if (!(obj instanceof Cancelada))
 			return false;
 		return true;
 	}

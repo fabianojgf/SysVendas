@@ -36,6 +36,11 @@ public class AguardandoChefia extends Status {
 	}
 
 	@Override
+	public void cancelar() {
+		this.solicitacao.setStatus(new Cancelada());
+	}
+	
+	@Override
 	public String toString() {
 		return "AguardandoChefia";
 	}

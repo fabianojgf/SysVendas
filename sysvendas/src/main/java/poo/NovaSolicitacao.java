@@ -37,6 +37,12 @@ public class NovaSolicitacao extends Status {
 	}
 
 	@Override
+	public void cancelar() {
+		throw new IllegalStateException(
+				"A solicitação nao pode ser Cancelada pois é nova");
+	}
+	
+	@Override
 	public String toString() {
 		return "NovaSolicitação";
 	}

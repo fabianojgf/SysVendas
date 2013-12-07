@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,6 +47,9 @@ public class Solicitacao implements Serializable {
 
 	@ManyToOne
 	Status status = new NovaSolicitacao();
+	
+	@Enumerated
+	private Tipo tipo; 
 
 	@Transactional
 	public String solicitar() {
@@ -74,6 +78,11 @@ public class Solicitacao implements Serializable {
 		status.retornar();
 		this.setObservacao(mensagem);
 		return "Retornada com sucesso";
+	}
+	
+	@Transactional
+	public String cancelar() {
+		return "Cancelada com sucesso";
 	}
 
 	public Funcionario getFuncionario() {
@@ -124,6 +133,35 @@ public class Solicitacao implements Serializable {
 		this.status = status;
 	}
 
+	public Tipo getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Tipo tipo) {
+		this.tipo = tipo;
+	}
+	
+	public enum Tipo {
+		A_SERVICO, ATESTADO_MEDICO, LICENCA, PONTO_ELETRONICO, OUTROS;
+		
+		public String toString()
+		{
+			switch (this) {
+				case A_SERVICO: 
+					return "A serviço";
+				case ATESTADO_MEDICO: 
+					return "Atestado Médico";
+				case LICENCA: 
+					return "Licença";
+				case PONTO_ELETRONICO: 
+					return "Problema no Ponto Eletrônico";
+				case OUTROS: 
+					return "Outros";
+			}
+			return super.toString();
+		}
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
