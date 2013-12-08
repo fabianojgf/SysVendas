@@ -15,7 +15,16 @@ public class NovaSolicitacao extends Status {
 	
 	@Override
 	public void solicitar() {
-		this.solicitacao.setStatus(new AguardandoChefia());
+		switch (this.solicitacao.getTipo()) {
+			case ATESTADO_MEDICO: 
+				this.solicitacao.setStatus(new AguardandoRH());
+				break;
+			case PONTO_ELETRONICO: 
+				this.solicitacao.setStatus(new AguardandoRH());
+				break;
+			default: 
+				this.solicitacao.setStatus(new AguardandoChefia());
+		}
 	}
 
 	@Override
