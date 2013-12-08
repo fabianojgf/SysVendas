@@ -49,7 +49,7 @@ public class Solicitacao implements Serializable {
 	Status status = new NovaSolicitacao();
 	
 	@Enumerated
-	private Tipo tipo; 
+	private Tipo tipo = Tipo.OUTROS; 
 
 	@Transactional
 	public String solicitar() {
@@ -82,6 +82,8 @@ public class Solicitacao implements Serializable {
 	
 	@Transactional
 	public String cancelar() {
+		status.setSolicitacao(this);
+		status.cancelar();
 		return "Cancelada com sucesso";
 	}
 
